@@ -32,6 +32,19 @@ bool GPIO::export_GPIO(void)
 		return false;
 }
 
+bool GPIO::unexport_GPIO(void)
+{
+	ofstream myfile ("/sys/class/gpio/unexport");
+		if (myfile.is_open())
+		{
+			myfile << gpioNum;
+			myfile.close();
+			return true;
+		}
+		else
+			return false;
+}
+
 string GPIO::get_GPIO(void)
 {
 	return gpioNum;

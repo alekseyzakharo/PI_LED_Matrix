@@ -18,6 +18,7 @@ class GPIO
 		GPIO(string num);
 
 		bool export_GPIO(void);
+		bool unexport_GPIO(void);
 
 		string get_GPIO(void);
 	private:
