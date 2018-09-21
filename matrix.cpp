@@ -4,11 +4,14 @@
  *  Created on: Sep 19, 2018
  *      Author: osboxes
  */
-#include "matrix.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
+
+#include "global.h"
+#include "matrix.h"
 #include "GPIOClass.h"
 
 static bool STOP;
@@ -58,20 +61,20 @@ void matrix::initArray(void)
 void matrix::initGPIO(void)
 {
 	//ASSIGN
-	R1 = new GPIOClass("1");
-	B1 = new GPIOClass("1");
-	R2 = new GPIOClass("1");
-	B2 = new GPIOClass("1");
-	A = new GPIOClass("1");
-	C = new GPIOClass("1");
-	CLK = new GPIOClass("1");
-	OE = new GPIOClass("1");
+	R1 = new GPIOClass(R1_GPIO);
+	B1 = new GPIOClass(B1_GPIO);
+	R2 = new GPIOClass(R2_GPIO);
+	B2 = new GPIOClass(B1_GPIO);
+	A = new GPIOClass(A_GPIO);
+	C = new GPIOClass(C_GPIO);
+	CLK = new GPIOClass(CLK_GPIO);
+	OE = new GPIOClass(OE_GPIO);
 
-	G1 = new GPIOClass("1");
-	G2 = new GPIOClass("1");
-	B = new GPIOClass("1");
-	D = new GPIOClass("1");
-	LAT = new GPIOClass("1");
+	G1 = new GPIOClass(G1_GPIO);
+	G2 = new GPIOClass(G2_GPIO);
+	B = new GPIOClass(B_GPIO);
+	D = new GPIOClass(D_GPIO);
+	LAT = new GPIOClass(LAT_GPIO);
 
 	//******************//
 
