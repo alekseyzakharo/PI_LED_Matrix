@@ -1,14 +1,15 @@
 #include <iostream>
-#include "GPIO.h"
+
+#include "GPIOClass.h"
 
 using namespace std;
 
 int main()
 {
-	GPIO four("11");
+	GPIOClass four("11");
 
-	four.export_GPIO();
-	cout<< four.get_GPIO();
+	four.setdir_gpio("out");
+
 
 	return 0;
 }

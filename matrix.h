@@ -26,6 +26,7 @@ class matrix
 
 
 		void initArray(void);
+		void initGPIO(void);
 
 };
 

@@ -50,7 +50,7 @@ OBJS := $(patsubst %.cpp,%.o,$(SRCS))
 
 all: $(TARGET) copy_target clean
 $(TARGET): $(OBJS)
-	$(CC) -o $@ $^
+	$(CC) -pthread -o $@ $^
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $<
 	
