@@ -1,16 +1,22 @@
 #include <iostream>
 
 #include "GPIOClass.h"
+#include "matrix.h"
 
 using namespace std;
 
 
-
 int main()
 {
-	GPIOClass four("11");
+	cout<<"starting led matrix"<<endl;
+	matrix m;
 
-	four.setdir_gpio("out");
+
+	m.start();
+	while(1)
+	{
+
+	}
 
 
 	return 0;

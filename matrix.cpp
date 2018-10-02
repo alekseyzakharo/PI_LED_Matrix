@@ -9,36 +9,52 @@
 #include <stdlib.h>
 #include <time.h>
 #include <pthread.h>
+#include <math.h>
+#include <string>
+#include <iostream>
 
-#include "global.h"
 #include "matrix.h"
 #include "GPIOClass.h"
 
 
 static bool STOP;
-static float DELAY_IN_S = 0;
-static float DELAY_IN_NS = 5000;
+static long int DELAY_IN_S = 0;
+static long int DELAY_IN_NS = 5000;
 
 static int MATRIX_SIZE = 32;
+static char screen[32][32];
 
+struct timespec req;
 
-static GPIOClass *R1,*B1,*R2,*B2, *A,*C,*CLK,*OE;
-static GPIOClass *G1,*G2,*B,*D,*LAT;
+static GPIOClass *R1;
+static GPIOClass *B1;
+static GPIOClass *R2;
+static GPIOClass *B2;
+static GPIOClass *A;
+static GPIOClass *C;
+static GPIOClass *CLK;
+static GPIOClass *OE;
 
-const string R1_GPIO = "18";
-const string B1_GPIO = "23";
-const string R2_GPIO = "24";
-const string B2_GPIO = "25";
-const string A_GPIO = "12";
-const string C_GPIO = "16";
-const string CLK_GPIO = "20";
-const string OE_GPIO = "21";
+static GPIOClass *G1;
+static GPIOClass *G2;
+static GPIOClass *B;
+static GPIOClass *D;
+static GPIOClass *LAT;
 
-const string G1_GPIO = "5";
-const string G2_GPIO = "6";
-const string B_GPIO = "13";
-const string D_GPIO = "19";
-const string LAT_GPIO = "26";
+string R1_GPIO = "18";
+string B1_GPIO = "23";
+string R2_GPIO = "24";
+string B2_GPIO = "25";
+string A_GPIO = "12";
+string C_GPIO = "16";
+string CLK_GPIO = "20";
+string OE_GPIO = "21";
+
+string G1_GPIO = "5";
+string G2_GPIO = "6";
+string B_GPIO = "13";
+string D_GPIO = "19";
+string LAT_GPIO = "26";
 
 
 static void matrixRefresh();
@@ -47,30 +63,39 @@ static void matrixClock();
 static void matrixLatch();
 static void matrixSetColorTop(int color);
 static void matrixSetColorBottom(int color);
-static void matrixSetPixel(int x, int y, int color);
+//static void matrixSetPixel(int x, int y, int color);
 static void matrixSetRow(int rowNum);
 
 
-void *run(void *id) {
-   while(!STOP)
-   {
+void *run(void *id)
+{
+	while(!STOP)
+	{
 	   matrixRefresh();
-   }
-   pthread_exit(NULL);
+
+	}
+	pthread_exit(NULL);
 }
 
 matrix::matrix(void)
 {
 	srand(time(NULL));
 	STOP = false;
+
+	//set the timespec nanosleep parameters
+	req = {0};
+	req.tv_sec = DELAY_IN_S;
+	req.tv_nsec = DELAY_IN_NS;
+
 	//randomize the array
 	initArray();
+	initGPIO();
 }
 
 bool matrix::start(void)
 {
 	pthread_t thread[1];
-	if(pthread_create(&thread[1], NULL, run, (void *)1))
+	if(pthread_create(&thread[0], NULL, run, (void *)1))
 		return false;
 	return true;
 }
@@ -177,7 +202,8 @@ static void matrixRefresh()
         OE->setval_gpio("0");
 
         // Refresh Delay
-        nanosleep((const struct timespec[]){{DELAY_IN_S, DELAY_IN_NS}}, NULL);
+
+        nanosleep(&req, NULL);
     }
 }
 
@@ -220,25 +246,25 @@ static void matrixSetColorTop(int color)
     integerToBitArray(arr, color, 3);
 
     // Set RGB GPIO Pin Values
-    char red1_val[2];
-    sprintf(red1_val, "%d", arr[0]);
+    //char red1_val[2];
+    string r1val = to_string(arr[0]);
+    //sprintf(r1val, "%d", arr[0]);
 //    lseek(fileDesc_red1, 0, SEEK_SET);
 //    write(fileDesc_red1, red1_val, 1);
-    string r1val = red1_val[0];
     R1->setval_gpio(r1val);
 
-    char green1_val[2];
-    sprintf(green1_val, "%d", arr[1]);
+    //char green1_val[2];
+    //sprintf(green1_val, "%d", arr[1]);
 //    lseek(fileDesc_green1, 0, SEEK_SET);
 //    write(fileDesc_green1, green1_val, 1);
-    string g1val = green1_val[0];
+    string g1val = to_string(arr[1]);
     G1->setval_gpio(g1val);
 
-    char blue1_val[2];
-    sprintf(blue1_val, "%d", arr[2]);
+    //char blue1_val[2];
+    //sprintf(blue1_val, "%d", arr[2]);
 //    lseek(fileDesc_blue1, 0, SEEK_SET);
 //    write(fileDesc_blue1, blue1_val, 1);
-    string b1val = blue1_val[0];
+    string b1val = to_string(arr[2]);
 	B1->setval_gpio(b1val);
 }
 
@@ -249,25 +275,25 @@ static void matrixSetColorBottom(int color)
     integerToBitArray(arr, color, 3);
 
     // Set RGB GPIO Pin Values
-    char red2_val[2];
-    sprintf(red2_val, "%d", arr[0]);
+//    char red2_val[2];
+//    sprintf(red2_val, "%d", arr[0]);
 //    lseek(fileDesc_red2, 0, SEEK_SET);
 //    write(fileDesc_red2, red2_val, 1);
-    string r2val = red2_val[0];
+    string r2val = to_string(arr[0]);
 	R2->setval_gpio(r2val);
 
-    char green2_val[2];
-    sprintf(green2_val, "%d", arr[1]);
+//    char green2_val[2];
+//    sprintf(green2_val, "%d", arr[1]);
 //    lseek(fileDesc_green2, 0, SEEK_SET);
 //    write(fileDesc_green2, green2_val, 1);
-    string g2val = green2_val[0];
+    string g2val = to_string(arr[1]);
 	G2->setval_gpio(g2val);
 
-    char blue2_val[2];
-    sprintf(blue2_val, "%d", arr[2]);
+//    char blue2_val[2];
+//    sprintf(blue2_val, "%d", arr[2]);
 //    lseek(fileDesc_blue2, 0, SEEK_SET);
 //    write(fileDesc_blue2, blue2_val, 1);
-    string b2val = blue2_val[0];
+    string b2val = to_string(arr[2]);
 	B2->setval_gpio(b2val);
 }
 

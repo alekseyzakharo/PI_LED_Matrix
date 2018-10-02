@@ -38,7 +38,7 @@
 #	rm -f *.o $(TARGET)
 
 CC := arm-linux-gnueabihf-g++
-CFLAGS := -O3 -g3 -Wall -fPIC
+CFLAGS := -O3 -g3 -Wall -fPIC -std=c++11
 TARGET := ledmatrix.out
 
 SHARE_PATH = $(HOME)/pi/public/

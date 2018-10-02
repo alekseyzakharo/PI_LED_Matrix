@@ -22,7 +22,6 @@ class matrix
 		void stop(void);
 
 	private:
-		char screen[32][32];
 
 
 		void initArray(void);
